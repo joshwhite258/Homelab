@@ -8,7 +8,7 @@ theme: dark
 color: slate
 headerStyle: clean
 hideVersion: true
-hideErrors: true
+hideErrors: false   # temporarily on to debug Beszel; set back to true when fixed
 statusStyle: dot
 useEqualHeights: true
 
