@@ -74,3 +74,27 @@
           username: homepage@local.lan
           password: "{{HOMEPAGE_VAR_BESZEL_PASSWORD}}"
           version: 2
+    - PVE:
+        icon: proxmox.png
+        href: https://beszel.edscastle.com
+        description: Proxmox host
+        widget:
+          type: beszel
+          url: http://192.168.68.61:8090
+          username: homepage@local.lan
+          password: "{{HOMEPAGE_VAR_BESZEL_PASSWORD}}"
+          version: 2
+          systemId: pve              # Beszel system name (case-sensitive) or ID
+          fields: ["cpu", "memory", "disk", "network"]
+    - Docker:
+        icon: docker.png
+        href: https://beszel.edscastle.com
+        description: Docker LXC
+        widget:
+          type: beszel
+          url: http://192.168.68.61:8090
+          username: homepage@local.lan
+          password: "{{HOMEPAGE_VAR_BESZEL_PASSWORD}}"
+          version: 2
+          systemId: docker
+          fields: ["cpu", "memory", "disk", "network"]
