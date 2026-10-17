@@ -1,0 +1,6 @@
+---
+# Docker integration — https://gethomepage.dev/configs/docker/
+# "local" is referenced by `server: local` in services.yaml.
+
+local:
+  socket: /var/run/docker.sock

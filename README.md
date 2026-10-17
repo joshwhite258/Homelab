@@ -21,7 +21,7 @@ A self-hosted home server built from a retired desktop PC running **Proxmox VE**
 | ↳ ESPHome | HA add-on | Builds and OTA-flashes ESP32 firmware (e.g. the Talking Wall Bass). |
 | **Pi-hole** | Proxmox guest | Network-wide DNS and ad/tracker blocking for LAN clients. |
 | **Nginx Proxy Manager** | Proxmox guest | Reverse proxy; gives each service a friendly hostname with TLS. |
-| **Homepage** | Proxmox guest | Dashboard with live widgets for every service. |
+| **Homepage** | Docker stack (Portainer) | Dashboard with live widgets for every service, themed and deployed from [`homepage/`](homepage/) in this repo. |
 | **Portainer** | Docker LXC | Manages Docker stacks on the host. |
 | **Uptime Kuma** | Docker stack (Portainer) | Uptime checks for every service. |
 | **Beszel** | Docker stack (Portainer) | Host and container resource metrics (CPU, RAM, disk, network). |

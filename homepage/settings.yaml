@@ -1,0 +1,43 @@
+---
+# Homepage settings — https://gethomepage.dev/configs/settings/
+# Look and feel lives in custom.css / custom.js (hero header, background, effects).
+
+title: Ed's Castle
+description: Josh's homelab dashboard
+theme: dark
+color: slate
+headerStyle: clean
+hideVersion: true
+hideErrors: true
+statusStyle: dot
+useEqualHeights: true
+cardBlur: md
+
+quicklaunch:
+  provider: google
+  searchDescriptions: true
+  showSearchSuggestions: true
+
+# Groups are assigned to tabs here. Names must match the groups in
+# services.yaml and bookmarks.yaml.
+layout:
+  Daily:
+    tab: Home
+    style: row
+    columns: 4
+  Projects:
+    tab: Home
+    style: row
+    columns: 4
+  Server:
+    tab: Server
+    style: row
+    columns: 4
+  Network:
+    tab: Server
+    style: row
+    columns: 2
+  Monitoring:
+    tab: Server
+    style: row
+    columns: 2

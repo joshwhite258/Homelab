@@ -1,0 +1,24 @@
+# Homepage stack (deployed through Portainer on the Docker LXC).
+# Config is read straight from the git clone at /opt/homelab/homepage,
+# and a cron job on the LXC pulls the repo every 5 minutes.
+#
+# Secrets are NOT in this repo. Set the HOMEPAGE_VAR_* values in the
+# Portainer stack's "Environment variables" section.
+
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    ports:
+      - 3000:3000
+    volumes:
+      - /opt/homelab/homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: home.edscastle.com,192.168.68.61:3000
+      HOMEPAGE_VAR_PROXMOX_SECRET: ${HOMEPAGE_VAR_PROXMOX_SECRET}
+      HOMEPAGE_VAR_PORTAINER_KEY: ${HOMEPAGE_VAR_PORTAINER_KEY}
+      HOMEPAGE_VAR_HA_KEY: ${HOMEPAGE_VAR_HA_KEY}
+      HOMEPAGE_VAR_PIHOLE_KEY: ${HOMEPAGE_VAR_PIHOLE_KEY}
+      HOMEPAGE_VAR_BESZEL_PASSWORD: ${HOMEPAGE_VAR_BESZEL_PASSWORD}
+    restart: unless-stopped

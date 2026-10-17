@@ -1,0 +1,76 @@
+---
+# Services on the Server tab — https://gethomepage.dev/configs/services/
+# No secrets in this file: every {{HOMEPAGE_VAR_*}} is filled in from the
+# environment variables on the Homepage stack in Portainer.
+
+- Server:
+    - Proxmox:
+        icon: proxmox.png
+        href: https://proxmox.edscastle.com
+        description: Hypervisor
+        widget:
+          type: proxmox
+          url: https://192.168.68.200:8006
+          username: root@pam!homepage
+          password: "{{HOMEPAGE_VAR_PROXMOX_SECRET}}"
+          node: pve
+    - Portainer:
+        icon: portainer.png
+        href: https://portainer.edscastle.com
+        description: Docker management
+        server: local
+        container: portainer
+        widget:
+          type: portainer
+          url: https://192.168.68.61:9443
+          env: 3
+          key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
+    - Home Assistant:
+        icon: home-assistant.png
+        href: https://ha.edscastle.com
+        description: Smart home hub
+        widget:
+          type: homeassistant
+          url: http://192.168.68.65:8123
+          key: "{{HOMEPAGE_VAR_HA_KEY}}"
+    - Nginx Proxy Manager:
+        icon: nginx-proxy-manager.png
+        href: https://npm.edscastle.com
+        description: Reverse proxy
+        server: local
+        container: npm
+    - File Browser:
+        icon: filebrowser.png
+        href: http://192.168.68.61:8085
+        description: Server file manager
+
+- Network:
+    - Pi-hole:
+        icon: pi-hole.png
+        href: https://pihole.edscastle.com
+        description: Ad blocking
+        widget:
+          type: pihole
+          url: http://192.168.68.62
+          version: 6
+          key: "{{HOMEPAGE_VAR_PIHOLE_KEY}}"
+
+- Monitoring:
+    - Uptime Kuma:
+        icon: uptime-kuma.png
+        href: https://kuma.edscastle.com
+        description: Service uptime
+        widget:
+          type: uptimekuma
+          url: http://192.168.68.61:3001
+          slug: home
+    - Beszel:
+        icon: beszel.png
+        href: https://beszel.edscastle.com
+        description: Server stats
+        widget:
+          type: beszel
+          url: http://192.168.68.61:8090
+          username: homepage@local.lan
+          password: "{{HOMEPAGE_VAR_BESZEL_PASSWORD}}"
+          version: 2

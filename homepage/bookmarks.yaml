@@ -1,0 +1,32 @@
+---
+# Links on the Home tab — https://gethomepage.dev/configs/bookmarks/
+# Add one by copying an entry and changing the name, icon and href.
+# Icons: https://dashboardicons.com (use the file name, e.g. steam.png)
+
+- Daily:
+    - Google:
+        - icon: google.png
+          href: https://www.google.com
+    - YouTube:
+        - icon: youtube.png
+          href: https://www.youtube.com
+    - Gmail:
+        - icon: gmail.png
+          href: https://mail.google.com
+    - Todoist:
+        - icon: todoist.png
+          href: https://app.todoist.com
+
+- Projects:
+    - Homelab Repo:
+        - icon: github.png
+          href: https://github.com/joshwhite258/Homelab
+    - GitHub:
+        - icon: github.png
+          href: https://github.com/joshwhite258
+    - Cloudflare:
+        - icon: cloudflare.png
+          href: https://dash.cloudflare.com
+    - Tailscale:
+        - icon: tailscale.png
+          href: https://login.tailscale.com/admin
