@@ -19,16 +19,16 @@
 
 - Projects:
     - Homelab Repo:
-        - icon: github.png
+        - icon: si-github-#ffffff
           href: https://github.com/joshwhite258/Homelab
     - GitHub:
-        - icon: github.png
+        - icon: si-github-#ffffff
           href: https://github.com/joshwhite258
     - Cloudflare:
         - icon: cloudflare.png
           href: https://dash.cloudflare.com
     - Tailscale:
-        - icon: tailscale.png
+        - icon: si-tailscale-#ffffff
           href: https://login.tailscale.com/admin
 
 - Media:
