@@ -24,6 +24,10 @@ layout:
     tab: Home
     style: row
     columns: 4
+  Lights:
+    tab: Home
+    style: row
+    columns: 2
   Projects:
     tab: Home
     style: row

@@ -17,6 +17,16 @@
         - icon: todoist.png
           href: https://app.todoist.com
 
+- Lights:
+    - All Lights On:
+        - icon: mdi-lightbulb-on-#f5c76b
+          description: Lights
+          href: "{{HOMEPAGE_VAR_HA_LIGHTS_ON_URL}}"
+    - All Lights Off:
+        - icon: mdi-lightbulb-off-#a6a1bf
+          description: Lights
+          href: "{{HOMEPAGE_VAR_HA_LIGHTS_OFF_URL}}"
+
 - Projects:
     - Homelab Repo:
         - icon: si-github-#ffffff

@@ -75,6 +75,30 @@
     startTyping();
   }
 
+  // Bookmarks that point at a Home Assistant webhook (/api/webhook/...) fire it
+  // in the background instead of opening a tab, and flash to confirm.
+  function flash(a, cls) {
+    a.classList.remove("ec-sent", "ec-fail");
+    void a.offsetWidth;
+    a.classList.add(cls);
+    setTimeout(() => a.classList.remove(cls), 1400);
+  }
+  document.addEventListener(
+    "click",
+    (e) => {
+      const a = e.target.closest(".bookmark > a");
+      if (!a) return;
+      const href = a.getAttribute("href") || "";
+      if (!href.includes("/api/webhook/")) return;
+      e.preventDefault();
+      e.stopPropagation();
+      fetch(href, { method: "POST", mode: "no-cors" })
+        .then(() => flash(a, "ec-sent"))
+        .catch(() => flash(a, "ec-fail"));
+    },
+    true,
+  );
+
   // Homepage is a React app and may re-render; keep the hero in place.
   ensureHero();
   new MutationObserver(ensureHero).observe(document.body, { childList: true, subtree: true });
