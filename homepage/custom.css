@@ -19,7 +19,7 @@
   --ec-line: rgba(255, 255, 255, 0.09);
 }
 
-/* ---------- Background: night sky + slow aurora ---------- */
+/* ---------- Background: night sky + soft glow ---------- */
 html,
 body {
   background: var(--ec-bg) !important;
@@ -29,15 +29,14 @@ body {
 body::before {
   content: "";
   position: fixed;
-  inset: -20%;
+  inset: 0;
   z-index: 0;
   pointer-events: none;
+  /* static glow: no blur filter or animation, so the GPU isn't redrawing it every frame */
   background:
-    radial-gradient(40% 35% at 20% 15%, rgba(155, 123, 255, 0.22), transparent 70%),
-    radial-gradient(35% 30% at 85% 10%, rgba(255, 159, 67, 0.14), transparent 70%),
-    radial-gradient(45% 40% at 60% 95%, rgba(94, 231, 223, 0.1), transparent 70%);
-  filter: blur(20px);
-  animation: ec-aurora 28s ease-in-out infinite alternate;
+    radial-gradient(50% 45% at 20% 10%, rgba(155, 123, 255, 0.2), transparent 75%),
+    radial-gradient(45% 40% at 85% 5%, rgba(255, 159, 67, 0.12), transparent 75%),
+    radial-gradient(55% 50% at 60% 100%, rgba(94, 231, 223, 0.08), transparent 75%);
 }
 
 /* star field */
@@ -59,17 +58,7 @@ body::after {
     radial-gradient(1px 1px at 94% 92%, #fff 50%, transparent 51%),
     radial-gradient(1px 1px at 35% 38%, #fff 50%, transparent 51%);
   background-size: 600px 600px;
-  opacity: 0.35;
-  animation: ec-twinkle 6s ease-in-out infinite alternate;
-}
-
-@keyframes ec-aurora {
-  0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
-  100% { transform: translate3d(-4%, 3%, 0) rotate(6deg); }
-}
-@keyframes ec-twinkle {
-  0%   { opacity: 0.2; }
-  100% { opacity: 0.45; }
+  opacity: 0.3;
 }
 
 /* ---------- Hero ---------- */
@@ -110,8 +99,7 @@ body::after {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 22px rgba(245, 199, 107, 0.25));
-  animation: ec-shimmer 9s linear infinite;
+  animation: ec-shimmer 12s linear infinite;
 }
 
 #ec-hero .ec-rule {
@@ -166,7 +154,6 @@ body::after {
   font-size: 0.9rem;
   font-weight: 500;
   text-decoration: none;
-  backdrop-filter: blur(10px);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 #ec-hero .ec-btn svg { width: 18px; height: 18px; fill: currentColor; }
@@ -235,7 +222,6 @@ body::after {
 .bookmark > a {
   background: var(--ec-glass) !important;
   border: 1px solid var(--ec-line);
-  backdrop-filter: blur(10px);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 .service-card:hover,
