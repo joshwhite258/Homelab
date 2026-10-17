@@ -34,6 +34,7 @@
 - Media:
     - Movies:
         - icon: mdi-movie-open-play
+          description: Movies
           href: "{{HOMEPAGE_VAR_MOVIES_URL}}"
     - Read Manga:
         - icon: mdi-book-open-page-variant
