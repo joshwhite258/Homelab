@@ -36,6 +36,10 @@
           href: https://login.tailscale.com/admin
 
 - Media:
+    - Jellyfin:
+        - icon: jellyfin.png
+          description: Shared media
+          href: "{{HOMEPAGE_VAR_JELLYFIN_URL}}"
     - Movies:
         - icon: mdi-movie-open-play
           description: Movies

@@ -35,7 +35,7 @@ layout:
   Media:
     tab: Home
     style: row
-    columns: 3
+    columns: 4
   Server:
     tab: Server
     style: row
