@@ -27,13 +27,7 @@
           description: Lights
           href: "{{HOMEPAGE_VAR_HA_LIGHTS_OFF_URL}}"
 
-- Projects:
-    - Homelab Repo:
-        - icon: si-github-#ffffff
-          href: https://github.com/joshwhite258/Homelab
-    - GitHub:
-        - icon: si-github-#ffffff
-          href: https://github.com/joshwhite258
+- Tools:
     - Cloudflare:
         - icon: cloudflare.png
           href: https://dash.cloudflare.com

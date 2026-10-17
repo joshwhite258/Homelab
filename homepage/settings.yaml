@@ -28,10 +28,10 @@ layout:
     tab: Home
     style: row
     columns: 2
-  Projects:
+  Tools:
     tab: Home
     style: row
-    columns: 4
+    columns: 2
   Media:
     tab: Home
     style: row

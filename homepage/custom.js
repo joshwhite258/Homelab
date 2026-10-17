@@ -36,11 +36,22 @@
       <div class="ec-eyebrow">${esc(CONFIG.eyebrow)}</div>
       <h1 class="ec-title">${esc(CONFIG.title)}</h1>
       <div class="ec-rule"></div>
+      <div class="ec-clock"><span class="ec-time"></span><span class="ec-date"></span></div>
       <p class="ec-desc">${esc(CONFIG.description)}</p>
       <div class="ec-term" aria-hidden="true"><span class="ec-prompt">$ running</span><span class="ec-typed"></span><span class="ec-caret">&nbsp;</span></div>
       <nav class="ec-links">${links}</nav>`;
     return hero;
   }
+
+  function updateClock() {
+    const t = document.querySelector("#ec-hero .ec-time");
+    const d = document.querySelector("#ec-hero .ec-date");
+    if (!t || !d) return;
+    const now = new Date();
+    t.textContent = now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    d.textContent = now.toLocaleDateString([], { weekday: "long", month: "long", day: "numeric" });
+  }
+  setInterval(updateClock, 15000);
 
   let typingStarted = false;
   function startTyping() {
@@ -72,6 +83,7 @@
     const anchor = document.getElementById("information-widgets");
     if (!anchor || !anchor.parentElement) return;
     anchor.parentElement.insertBefore(buildHero(), anchor);
+    updateClock();
     startTyping();
   }
 

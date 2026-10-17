@@ -1,5 +1,5 @@
 ---
-# Header widgets (shown on every tab) — https://gethomepage.dev/configs/info-widgets/
+# Header widgets (shown on every tab). The date/time lives in the hero (custom.js). — https://gethomepage.dev/configs/info-widgets/
 
 - search:
     provider: google
@@ -7,8 +7,3 @@
     showSearchSuggestions: true
     target: _blank
 
-- datetime:
-    text_size: xl
-    format:
-      timeStyle: short
-      dateStyle: long
