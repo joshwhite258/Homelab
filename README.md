@@ -79,7 +79,7 @@ Remote traffic reaches the server over Tailscale, so the router doesn't need por
 
 ## Design notes
 
-**Backups.** Proxmox's built-in backup job snapshots every VM and LXC weekly to the 1 TB SSD, keeping the last four, with a test restore of one LXC to prove the backups actually work. Bot code lives in git, so an LXC can also be rebuilt from scratch with a clone and a systemd unit. *(Status: verifying the job and doing a first test restore.)*
+**Backups.** Proxmox's built-in backup job snapshots every VM and LXC weekly to the 1 TB SSD, keeping the last four. Bot code lives in git, so an LXC can also be rebuilt from scratch with a clone and a systemd unit.
 
 **Monitoring.** Uptime Kuma checks that each service is reachable, and Beszel tracks resource usage on the host and containers so slow problems (a filling disk, a memory leak) show up before they cause an outage. Homepage pulls both into one dashboard.
 
@@ -94,10 +94,8 @@ Remote traffic reaches the server over Tailscale, so the router doesn't need por
 
 ## Roadmap
 
-- [ ] Test-restore a backup to confirm the weekly Proxmox backups actually work
 - [ ] Finish the security items above (2FA everywhere, key-only SSH, Proxmox firewall, IoT network)
-- [ ] Self-host a password manager (Vaultwarden) on the Docker LXC
-- [ ] Move to my own Tailscale tailnet with ACLs so only my devices can reach admin UIs
+- [ ] Tailscale ACLs so only my devices can reach admin UIs
 - [ ] Encrypted upstream DNS for Pi-hole (Unbound or cloudflared)
 - [ ] Update routine: `unattended-upgrades` on LXCs, monthly host and stack updates
 - [ ] Connect more hardware projects to the hub (offline ADS-B plane tracker feed)
