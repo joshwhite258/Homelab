@@ -17,6 +17,8 @@
   --ec-glass: rgba(255, 255, 255, 0.045);
   --ec-glass-hover: rgba(255, 255, 255, 0.08);
   --ec-line: rgba(255, 255, 255, 0.09);
+  --ec-card: rgba(13, 11, 26, 0.82);
+  --ec-card-hover: rgba(24, 20, 44, 0.9);
 }
 
 /* ---------- Background: night sky + soft glow ---------- */
@@ -34,6 +36,8 @@ body::before {
   pointer-events: none;
   /* static glow: no blur filter or animation, so the GPU isn't redrawing it every frame */
   background:
+    radial-gradient(circle 26px at 84% 14%, #fff4dc 96%, transparent 100%),
+    radial-gradient(circle 140px at 84% 14%, rgba(255, 228, 170, 0.18), transparent 100%),
     radial-gradient(50% 45% at 20% 10%, rgba(155, 123, 255, 0.2), transparent 75%),
     radial-gradient(45% 40% at 85% 5%, rgba(255, 159, 67, 0.12), transparent 75%),
     radial-gradient(55% 50% at 60% 100%, rgba(94, 231, 223, 0.08), transparent 75%);
@@ -220,16 +224,58 @@ body::after {
 /* ---------- Cards ---------- */
 .service-card,
 .bookmark > a {
-  background: var(--ec-glass) !important;
+  background: var(--ec-card) !important;
   border: 1px solid var(--ec-line);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 .service-card:hover,
 .bookmark > a:hover {
   transform: translateY(-2px);
-  background: var(--ec-glass-hover) !important;
+  background: var(--ec-card-hover) !important;
   border-color: rgba(245, 199, 107, 0.4);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), 0 0 18px rgba(155, 123, 255, 0.15);
+}
+
+/* ---------- Castle silhouette (source: castle.svg, embedded below) ---------- */
+html::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: min(58vh, 560px);
+  z-index: 0;
+  pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 600' preserveAspectRatio='xMidYMax slice'%3E %3Cdefs%3E %3Cfilter id='g' x='-200%25' y='-200%25' width='500%25' height='500%25'%3E%3CfeGaussianBlur stdDeviation='5'/%3E%3C/filter%3E %3ClinearGradient id='fog' x1='0' y1='0' x2='0' y2='1'%3E %3Cstop offset='0' stop-color='%239b7bff' stop-opacity='0'/%3E %3Cstop offset='1' stop-color='%239b7bff' stop-opacity='0.07'/%3E %3C/linearGradient%3E %3C/defs%3E %3Cpath fill='%230f0d1e' d='M0 470 C160 430 300 455 420 440 C560 420 640 470 800 455 C960 440 1060 410 1200 430 C1350 452 1480 420 1600 440 L1600 600 L0 600 Z'/%3E %3Crect x='0' y='400' width='1600' height='200' fill='url(%23fog)'/%3E %3Cg fill='%2305040b'%3E %3Crect x='540' y='430' width='80' height='90'/%3E %3Crect x='540' y='419' width='10' height='11'/%3E %3Crect x='559' y='419' width='10' height='11'/%3E %3Crect x='578' y='419' width='10' height='11'/%3E %3Crect x='597' y='419' width='10' height='11'/%3E %3Crect x='980' y='430' width='80' height='90'/%3E %3Crect x='980' y='419' width='10' height='11'/%3E %3Crect x='999' y='419' width='10' height='11'/%3E %3Crect x='1018' y='419' width='10' height='11'/%3E %3Crect x='1037' y='419' width='10' height='11'/%3E %3Crect x='515' y='395' width='34' height='125'/%3E %3Crect x='515' y='385' width='8' height='10'/%3E %3Crect x='529' y='385' width='8' height='10'/%3E %3Crect x='1051' y='395' width='34' height='125'/%3E %3Crect x='1051' y='385' width='8' height='10'/%3E %3Crect x='1065' y='385' width='8' height='10'/%3E %3Crect x='660' y='390' width='50' height='130'/%3E %3Crect x='660' y='379' width='10' height='11'/%3E %3Crect x='679' y='379' width='10' height='11'/%3E %3Crect x='698' y='379' width='10' height='11'/%3E %3Crect x='890' y='390' width='50' height='130'/%3E %3Crect x='890' y='379' width='10' height='11'/%3E %3Crect x='909' y='379' width='10' height='11'/%3E %3Crect x='928' y='379' width='10' height='11'/%3E %3Crect x='705' y='310' width='190' height='210'/%3E %3Crect x='705' y='297' width='12' height='13'/%3E %3Crect x='727' y='297' width='12' height='13'/%3E %3Crect x='749' y='297' width='12' height='13'/%3E %3Crect x='771' y='297' width='12' height='13'/%3E %3Crect x='793' y='297' width='12' height='13'/%3E %3Crect x='815' y='297' width='12' height='13'/%3E %3Crect x='837' y='297' width='12' height='13'/%3E %3Crect x='859' y='297' width='12' height='13'/%3E %3Crect x='881' y='297' width='12' height='13'/%3E %3Crect x='612' y='335' width='54' height='185'/%3E %3Cpolygon points='606,335 672,335 639.0,262'/%3E %3Crect x='934' y='335' width='54' height='185'/%3E %3Cpolygon points='928,335 994,335 961.0,262'/%3E %3Crect x='770' y='215' width='60' height='305'/%3E %3Cpolygon points='764,215 836,215 800.0,128'/%3E %3Crect x='799' y='96' width='2.5' height='34'/%3E %3Cpolygon points='801.5,97 832,105 801.5,113'/%3E %3C/g%3E %3Cg fill='%23f5c76b' filter='url(%23g)' opacity='0.7'%3E %3Crect x='796' y='240' width='7' height='13' rx='3.5'/%3E %3Crect x='796' y='272' width='7' height='13' rx='3.5'/%3E %3Crect x='634' y='360' width='7' height='13' rx='3.5'/%3E %3Crect x='956' y='360' width='7' height='13' rx='3.5'/%3E %3Crect x='735' y='345' width='7' height='13' rx='3.5'/%3E %3Crect x='858' y='345' width='7' height='13' rx='3.5'/%3E %3Crect x='760' y='395' width='7' height='13' rx='3.5'/%3E %3Crect x='835' y='395' width='7' height='13' rx='3.5'/%3E %3Crect x='560' y='450' width='7' height='13' rx='3.5'/%3E %3Crect x='1030' y='450' width='7' height='13' rx='3.5'/%3E %3Crect x='680' y='420' width='7' height='13' rx='3.5'/%3E %3Crect x='910' y='420' width='7' height='13' rx='3.5'/%3E %3C/g%3E %3Cg fill='%23ffd98a'%3E %3Crect x='796' y='240' width='7' height='13' rx='3.5'/%3E %3Crect x='796' y='272' width='7' height='13' rx='3.5'/%3E %3Crect x='634' y='360' width='7' height='13' rx='3.5'/%3E %3Crect x='956' y='360' width='7' height='13' rx='3.5'/%3E %3Crect x='735' y='345' width='7' height='13' rx='3.5'/%3E %3Crect x='858' y='345' width='7' height='13' rx='3.5'/%3E %3Crect x='760' y='395' width='7' height='13' rx='3.5'/%3E %3Crect x='835' y='395' width='7' height='13' rx='3.5'/%3E %3Crect x='560' y='450' width='7' height='13' rx='3.5'/%3E %3Crect x='1030' y='450' width='7' height='13' rx='3.5'/%3E %3Crect x='680' y='420' width='7' height='13' rx='3.5'/%3E %3Crect x='910' y='420' width='7' height='13' rx='3.5'/%3E %3C/g%3E %3Cpath fill='%2305040b' d='M300 600 Q800 400 1300 600 Z'/%3E %3Cpath fill='%2307060d' d='M0 560 C220 530 420 575 640 556 C900 535 1100 580 1340 552 C1460 540 1540 548 1600 545 L1600 600 L0 600 Z'/%3E %3C/svg%3E") center bottom / cover no-repeat;
+}
+
+/* ---------- Page width: keep things from stretching on wide monitors ---------- */
+.container:has(> #information-widgets) {
+  max-width: 1180px !important;
+}
+
+/* ---------- Bookmarks: bigger tiles, name only ---------- */
+.bookmark > a {
+  margin-bottom: 0.8rem !important;
+  border-radius: 0.75rem !important;
+  overflow: hidden;
+}
+.bookmark-icon {
+  width: 3.75rem !important;
+  border-radius: 0 !important;
+}
+.bookmark-icon > div {
+  width: 1.9rem !important;
+  height: 1.9rem !important;
+}
+.bookmark-name {
+  padding: 1.1rem 1rem !important;
+  font-size: 1rem !important;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.bookmark-description {
+  display: none !important;
 }
 
 /* ---------- Accessibility ---------- */
@@ -244,6 +290,14 @@ body::after {
 }
 
 @media (max-width: 640px) {
+  body::before {
+    background:
+      radial-gradient(circle 18px at 88% 5%, #fff4dc 96%, transparent 100%),
+      radial-gradient(circle 90px at 88% 5%, rgba(255, 228, 170, 0.16), transparent 100%),
+      radial-gradient(60% 40% at 15% 5%, rgba(155, 123, 255, 0.2), transparent 75%),
+      radial-gradient(60% 45% at 60% 100%, rgba(94, 231, 223, 0.08), transparent 75%);
+  }
+  html::after { height: 40vh; }
   #ec-hero { margin-top: 2rem; }
   #ec-hero .ec-desc { font-size: 0.92rem; }
 }

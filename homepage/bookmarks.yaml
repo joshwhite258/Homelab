@@ -30,3 +30,14 @@
     - Tailscale:
         - icon: tailscale.png
           href: https://login.tailscale.com/admin
+
+- Media:
+    - Movies:
+        - icon: mdi-movie-open-play
+          href: "{{HOMEPAGE_VAR_MOVIES_URL}}"
+    - Read Manga:
+        - icon: mdi-book-open-page-variant
+          href: https://mangafire.to
+    - One Pace:
+        - icon: mdi-sail-boat
+          href: https://onepace.net/en/watch

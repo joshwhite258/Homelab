@@ -28,6 +28,10 @@ layout:
     tab: Home
     style: row
     columns: 4
+  Media:
+    tab: Home
+    style: row
+    columns: 3
   Server:
     tab: Server
     style: row
