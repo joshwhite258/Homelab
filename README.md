@@ -7,7 +7,7 @@ A self-hosted home server built from a retired desktop PC running **Proxmox VE**
 | Part | Detail |
 |---|---|
 | Motherboard | Asus Z97-A/USB 3.1 (LGA1150) |
-| Storage | 512 GB NVMe + 1 TB SATA SSD (extra Proxmox storage / backup target) |
+| Storage | 512 GB NVMe (Proxmox + all guests) · 1 TB SATA SSD (backups) |
 | Case | Apevia X-Dreamer4 ATX mid tower |
 | Network | TP-Link Deco mesh |
 | Remote access | Tailscale (no port forwards needed) |
@@ -79,13 +79,15 @@ Remote traffic reaches the server over Tailscale, so the router doesn't need por
 
 ## Design notes
 
-**Backups.** Proxmox's built-in backup job snapshots every VM and LXC weekly to the 1 TB SSD, keeping the last four. Bot code lives in git, so an LXC can also be rebuilt from scratch with a clone and a systemd unit.
+**Backups.** Storage is split by role: every VM and LXC runs on the NVMe (`local-lvm`), and backups go to the 1 TB SSD, so a single drive failure can't take out both a guest and its backup. A weekly Proxmox backup job (Sunday 1:00 AM, snapshot mode, keep last 7) covers all guests and writes to a dedicated ext4 volume carved from the SSD's LVM-thin pool, since LVM-thin can't store backup files directly. "Repeat missed" is on, so a run skipped during a power outage catches up at the next boot. Bot code also lives in git, so an LXC can be rebuilt from scratch with a clone and a systemd unit.
 
 **Monitoring.** Uptime Kuma checks that each service is reachable, and Beszel tracks resource usage on the host and containers so slow problems (a filling disk, a memory leak) show up before they cause an outage. Homepage pulls both into one dashboard.
 
 **Alerting.** Uptime Kuma is the alert source: when a check fails it fires a notification instead of waiting for me to notice. It also doubles as the safety net for updates; after patching the host, LXCs or containers, anything that doesn't come back shows up as down.
 
 ## Problems I solved
+
+- **A silently missed backup.** After a ~42-hour power outage, I noticed the newest backups were two weeks old. `journalctl --list-boots` showed the server was off when the weekly job was due, and Proxmox skips missed runs by default. Digging in also showed the backups were landing on the same NVMe as most of the guests. I enabled "Repeat missed," moved the two guests living on the SSD (Docker and Home Assistant, including its EFI disk) onto the NVMe, and turned part of the SSD's thin pool into dedicated backup storage. Now guests and backups always sit on different drives.
 
 - **NVMe on a 2014 motherboard.** The Z97-A didn't recognize the KingSpec NVMe drive at first, which blocked the initial Linux install. I worked through it, and that drive now runs in the server.
 - **Uptime Kuma install failing.** The Proxmox community-script LXC install for Uptime Kuma failed. Instead of fighting it, I deployed Uptime Kuma (and later Beszel) as Docker stacks through Portainer, which made them easier to update and back up.
