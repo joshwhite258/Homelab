@@ -44,7 +44,7 @@
         href: http://192.168.68.61:8085
         description: Server file manager
 
-- Network:
+- Network & Security:
     - Pi-hole:
         icon: pi-hole.png
         href: https://pihole.edscastle.com
@@ -54,6 +54,26 @@
           url: http://192.168.68.62
           version: 6
           key: "{{HOMEPAGE_VAR_PIHOLE_KEY}}"
+
+    - DNS Chain:
+        icon: uptime-kuma.svg
+        href: https://kuma.edscastle.com
+        widget:
+          type: uptimekuma
+          url: http://192.168.68.61:3001
+          slug: security                        # an Uptime Kuma status page named "security"
+
+    - Nginx Proxy Manager:
+        icon: nginx-proxy-manager.svg
+        href: http://npm.edscastle.com
+        description: Reverse proxy
+        server: local
+        container: npm
+        widget:
+          type: npm
+          url: http://192.168.68.61:81
+          username: "{{HOMEPAGE_VAR_NPM_USER}}"
+          password: "{{HOMEPAGE_VAR_NPM_PASS}}"
 
 - Monitoring:
     - Uptime Kuma:
