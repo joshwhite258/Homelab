@@ -32,7 +32,7 @@ Host setup also includes the Proxmox community *PVE Post Install* and microcode 
 
 ## Dashboard
 
-![Ed's Castle dashboard](homepage/screenshot.png)
+![Ed's Castle dashboard: clicking between the Home and Server tabs](homepage/demo.gif)
 
 The Homepage dashboard has a **Home** tab for everyday links and Google search, and a **Server** tab with live widgets for Proxmox, Portainer, Home Assistant, Pi-hole, Uptime Kuma and Beszel. The theme (night-sky castle backdrop, custom header) is plain CSS and JS in [`homepage/`](homepage/). The Docker LXC runs it straight from a clone of this repo and pulls every five minutes, so a push here updates the live dashboard. API keys stay out of git as `HOMEPAGE_VAR_*` environment variables on the stack.
 
