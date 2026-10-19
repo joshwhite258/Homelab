@@ -75,13 +75,9 @@ Remote traffic reaches the server over Tailscale, so the router doesn't need por
 - Remote access goes through Tailscale, so nothing needs to be exposed to the internet to reach the lab from outside.
 - Nginx Proxy Manager is the single entry point for web UIs, with TLS on each hostname.
 - Pi-hole filters DNS for the whole network, blocking ads and trackers before devices connect to them.
-
-**In progress**
-- Confirm zero port forwards and UPnP off on the router, then verify with an outside scan of the public IP.
-- TOTP 2FA and unique passwords (password manager) on every account: Proxmox, Home Assistant, Portainer, NPM, Pi-hole, GitHub, Cloudflare, Tailscale.
-- Proxmox: separate non-root admin user, and the firewall limiting 8006/22 to the LAN and Tailscale range.
-- Key-only SSH (`PasswordAuthentication no`) on the host and every LXC.
-- IoT devices (Govee lights, ESP32s) moved onto their own isolated Wi-Fi network.
+- Pi-hole resolves recursively through a local Unbound instance with DNSSEC validation, so DNS queries aren't handed to a public upstream resolver.
+- UPnP is off and there are no port forwards on the router; an outside check of the public IP shows nothing exposed.
+- Unique passwords in a password manager, with TOTP 2FA on the important accounts.
 
 ## Design notes
 
@@ -102,8 +98,8 @@ Remote traffic reaches the server over Tailscale, so the router doesn't need por
 
 ## Roadmap
 
-- [ ] Finish the security items above (2FA everywhere, key-only SSH, Proxmox firewall, IoT network)
-- [ ] Tailscale ACLs so only my devices can reach admin UIs
-- [ ] Encrypted upstream DNS for Pi-hole (Unbound or cloudflared)
+- [x] Local recursive DNS for Pi-hole (Unbound)
+- [x] Password manager and 2FA on the important accounts
+- [ ] Keep hardening the lab (ongoing)
 - [ ] Update routine: `unattended-upgrades` on LXCs, monthly host and stack updates
 - [ ] Connect more hardware projects to the hub (offline ADS-B plane tracker feed)
