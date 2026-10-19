@@ -101,5 +101,5 @@ Remote traffic reaches the server over Tailscale, so the router doesn't need por
 - [x] Local recursive DNS for Pi-hole (Unbound)
 - [x] Password manager and 2FA on the important accounts
 - [ ] Keep hardening the lab (ongoing)
-- [ ] Update routine: `unattended-upgrades` on LXCs, monthly host and stack updates
+- [ ] Formalize the update routine for the host, LXCs and containers
 - [ ] Connect more hardware projects to the hub (offline ADS-B plane tracker feed)
