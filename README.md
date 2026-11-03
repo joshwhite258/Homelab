@@ -26,7 +26,7 @@ A self-hosted home server built from a retired desktop PC running **Proxmox VE**
 | **Uptime Kuma** | Docker stack (Portainer) | Uptime checks for every service. |
 | **Beszel** | Docker stack (Portainer) | Host and container resource metrics (CPU, RAM, disk, network). |
 | **TrackBot** | LXC (systemd + git clone) | Discord bot: weekly git/Todoist digests and game-night pings. |
-| **OSCBot** | LXC (systemd + git clone) | Discord bot for an Old School RuneScape clan: Wise Old Man stats, Dink drop tracking, team bingo. |
+| **OSCBot** | LXC (systemd + git clone) | Discord bot for an Old School RuneScape clan: rank-up commands, team bingo with live board images, and Dink drop tracking. |
 
 Host setup also includes the Proxmox community *PVE Post Install* and microcode scripts.
 
