@@ -27,6 +27,7 @@ A self-hosted home server built from a retired desktop PC running **Proxmox VE**
 | **Beszel** | Docker stack (Portainer) | Host and container resource metrics (CPU, RAM, disk, network). |
 | **TrackBot** | LXC (systemd + git clone) | Discord bot: weekly git/Todoist digests and game-night pings. |
 | **OSCBot** | LXC (systemd + git clone) | Discord bot for an Old School RuneScape clan: rank-up commands, team bingo with live board images, and Dink drop tracking. |
+| **PostgreSQL** | LXC | Shared database server for the apps: one database and one user per app (see [Postgres](#postgres-one-database-and-one-user-per-app)). |
 
 Host setup also includes the Proxmox community *PVE Post Install* and microcode scripts.
 
@@ -72,6 +73,141 @@ Remote traffic reaches the server over Tailscale, so the router doesn't need por
 - Pi-hole resolves recursively through a local Unbound instance with DNSSEC validation, so DNS queries aren't handed to a public upstream resolver.
 - UPnP is off and there are no port forwards on the router; an outside check of the public IP shows nothing exposed.
 - Unique passwords in a password manager, with TOTP 2FA on the important accounts.
+
+## Postgres: one database and one user per app
+
+Every app gets its own login role and its own database, owned by that role. No app uses the `postgres` superuser, and no app can see another app's data.
+
+| Thing | Rule |
+|---|---|
+| Role | Same name as the app, `LOGIN`, no superuser, no create-db, no create-role |
+| Database | Same name as the app, `OWNER` = that role |
+| Who can connect | Only that role (`CONNECT` revoked from `PUBLIC`) |
+| From where | One `pg_hba.conf` line per app container, `scram-sha-256` |
+| Password | Random, stored in a password manager and the app's `.env` only |
+| Backups | One nightly `pg_dump` file per database |
+
+Placeholders: `<app>` app/role/database name (lowercase, letters, digits, `_`), `<pg_host>` the Postgres server address, `<app_host>` the app container's address. Examples below use `exampleapp`.
+
+### 1. Generate a password
+
+```bash
+openssl rand -hex 32
+```
+
+Hex (0-9, a-f) has no characters that need escaping in a URL, a shell or a config file. 64 hex characters is plenty. Save it in the password manager before going on.
+
+### 2. Create the role and database
+
+Run on the Postgres server as the `postgres` OS user (local socket, no password needed):
+
+```bash
+sudo -u postgres psql
+```
+
+```sql
+CREATE ROLE exampleapp LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION CONNECTION LIMIT 20;
+\password exampleapp
+CREATE DATABASE exampleapp OWNER exampleapp ENCODING 'UTF8';
+REVOKE CONNECT ON DATABASE exampleapp FROM PUBLIC;
+GRANT  CONNECT ON DATABASE exampleapp TO exampleapp;
+\c exampleapp
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+ALTER SCHEMA public OWNER TO exampleapp;
+\q
+```
+
+Why each line:
+- `\password` prompts for the password and sends only a hash, so it never lands in shell or psql history. (`CREATE USER x WITH PASSWORD '...'` also works but leaves the password in `~/.psql_history`.)
+- `REVOKE CONNECT ... FROM PUBLIC`: by default every role may connect to every database. This makes the database private to its owner.
+- `schema public`: since Postgres 15 the `public` schema belongs to `pg_database_owner` and ordinary roles can no longer create tables in it. Making the app role its owner is explicit and lets the app's migrations create and alter tables. On Postgres 14 or older, the `REVOKE ALL ON SCHEMA public FROM PUBLIC` line is the important one.
+- The app role owns its database, so migration tools (Alembic and so on) work without any server-level rights.
+
+### 3. Allow the app's container in `pg_hba.conf`
+
+One line per app, in `/etc/postgresql/<version>/main/pg_hba.conf`, above any final `reject` lines (first match wins):
+
+```
+# TYPE  DATABASE    USER        ADDRESS          METHOD
+host    exampleapp  exampleapp  <app_host>/32    scram-sha-256
+```
+
+Then reload (no restart, no dropped connections):
+
+```bash
+sudo systemctl reload postgresql
+```
+
+- `/32` means exactly one address. Avoid whole-LAN ranges.
+- Never `trust` or `md5`. `password_encryption = 'scram-sha-256'` should be set (it is the default since Postgres 14).
+- If the server has a firewall, also allow `<app_host>` to TCP 5432.
+
+### 4. Point the app at it
+
+In the app's `.env` on its own container (never committed):
+
+```
+DATABASE_URL=postgresql://<app>:<password>@<pg_host>:5432/<app>
+```
+
+- SQLAlchemy needs the driver in the scheme: `postgresql+psycopg://` for psycopg 3, `postgresql+psycopg2://` for psycopg2, `postgresql+asyncpg://` for asyncpg.
+- **URL-encode special characters in the password.** These break the URL: `@ : / ? # [ ] % & + = space`. Encode them as `%40 %3A %2F %3F %23 %5B %5D %25 %26 %2B %3D %20`. Encode in Python with:
+  ```bash
+  python3 -c 'import urllib.parse,getpass; print(urllib.parse.quote(getpass.getpass(), safe=""))'
+  ```
+  A hex password from step 1 never needs encoding.
+- If the URL goes through Alembic's `config.set_main_option()`, a `%` must be doubled (`%%`), because that file uses Python's configparser. Another reason to use hex.
+
+Test from the app container (prompts for the password):
+
+```bash
+psql "host=<pg_host> dbname=<app> user=<app>" -c "select current_user, current_database();"
+psql "host=<pg_host> dbname=postgres user=<app>" -c "select 1;"   # must FAIL
+```
+
+### 5. Nightly backups, one file per database
+
+Each database is dumped on its own, in custom format, with the date in the file name:
+
+```bash
+pg_dump --format=custom --file=<backup_dir>/<app>_$(date +%F_%H%M%S).dump <app>
+```
+
+- A read-only `backup` role with `pg_read_all_data` does the dumps. Because `CONNECT` is revoked from `PUBLIC`, each new database also needs `GRANT CONNECT ON DATABASE <app> TO backup;`.
+- The backup user's password lives in its `~/.pgpass` (mode 600), not in the script or cron line.
+- Cron runs it nightly; old dumps are pruned after N days; dumps are copied off the server.
+- Dumps do not contain roles or passwords. A full restore recreates the role first (step 2), then `pg_restore`.
+- A backup that has never been restored is not a backup. Restore into a scratch database once a month.
+
+### Adding a new app (checklist)
+
+- [ ] Pick the name `<app>` (lowercase, no dashes).
+- [ ] `openssl rand -hex 32`, save it in the password manager.
+- [ ] Step 2: role, `\password`, database, revoke/grant connect, schema owner.
+- [ ] `GRANT CONNECT ON DATABASE <app> TO backup;`
+- [ ] Step 3: one `pg_hba.conf` line for the app's container, reload.
+- [ ] Firewall: allow `<app_host>` to 5432.
+- [ ] Add `<app>` to the backup script's database list.
+- [ ] Step 4: `DATABASE_URL` in the app's `.env`, then the two `psql` tests.
+- [ ] Run the app's migrations, then check the next night's dump exists.
+
+### Removing an app
+
+1. Stop the app and remove `DATABASE_URL` from its `.env`.
+2. Take a final dump and keep it somewhere safe:
+   `pg_dump --format=custom --file=<backup_dir>/<app>_final_$(date +%F).dump <app>`
+3. Delete the app's line from `pg_hba.conf` and `sudo systemctl reload postgresql`. Remove its firewall rule.
+4. Remove `<app>` from the backup script's list.
+5. Drop the database and role:
+   ```sql
+   SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '<app>';
+   DROP DATABASE <app>;
+   -- In each OTHER database where the role might own or be granted something:
+   -- REASSIGN OWNED BY <app> TO postgres; DROP OWNED BY <app>;
+   DROP ROLE <app>;
+   ```
+   `DROP ROLE` fails while the role still owns objects or holds grants anywhere; the `REASSIGN OWNED` / `DROP OWNED` pair clears them. If the role only ever touched its own database, dropping that database is usually enough.
+6. Delete the password from the password manager after the final dump has been test-restored once.
 
 ## Design notes
 
